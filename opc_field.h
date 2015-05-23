@@ -1,7 +1,9 @@
 #ifndef OPC_TYPE_H
 #define OPC_TYPE_H
 #include "def.h"
-#include "cstdio"
+#include "table.h"
+#include <cstdio>
+
 
 namespace opc
 {
@@ -11,15 +13,15 @@ template <typename T>
 class OPC_field
 {
 public:
-    OPC_field(const char *proto_str, const addr_type addr)
-        : addr(addr), ofset(0)
+    OPC_field(const Table &parent, const addr_type addr)
+        : addr(addr), ofset(0), parent(parent)
     {
-        CompileAddr(proto_str, false);
+        CompileAddr(false);
     }
-    OPC_field(const char *proto_str, const addr_type addr, const addr_ofset_type ofset)
-        :addr(addr), ofset(ofset)
+    OPC_field(const Table &parent, const addr_type addr, const addr_ofset_type ofset)
+        :addr(addr), ofset(ofset), parent(parent)
     {
-        CompileAddr(proto_str, true);
+        CompileAddr(true);
     }
 
     ~OPC_field()
@@ -40,26 +42,24 @@ public:
         return addr_str;
     }
 private:
-    void CompileAddr(const char *proto_str, bool use_ofset)
+    void CompileAddr(bool use_ofset)
     {
-        if (proto_str)
-            if (use_ofset)
-                snprintf(addr_str, 40, "%s%lu.%u", proto_str, addr, ofset);
-            else
-                snprintf(addr_str, 40, "%s%lu", proto_str, addr);
+        if (use_ofset)
+            snprintf(addr_str, 40, "%s%lu.%u", parent.Name(), addr, ofset);
         else
-            if (use_ofset)
-                snprintf(addr_str, 40, "%lu.%u", addr, ofset);
-            else
-                snprintf(addr_str, 40, "%lu", addr);
+            snprintf(addr_str, 40, "%s%lu", parent.Name(), addr);
     }
-    char addr_str[40] = {0};
+    char addr_str[41] = {0};
     const addr_type addr;
     const addr_ofset_type ofset;
+    const Table &parent;
 
     T value;
 };
 
+typedef OPC_field<__int32_t> Fint;
+typedef OPC_field<float> Freal;
+typedef OPC_field<bool> Fbool;
 }
 
 #endif // OPC_TYPE_H
