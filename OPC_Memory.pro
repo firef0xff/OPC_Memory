@@ -4,10 +4,12 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    cache.cpp \
     memory.cpp
 
 HEADERS += \
     cache.h \
-    memory.h
+    memory.h \
+    def.h \
+    opc_field.h
 
+QMAKE_CXXFLAGS += -std=c++11

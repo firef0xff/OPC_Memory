@@ -9,7 +9,6 @@ Memory::Memory()
 Memory::~Memory()
 {
 }
-
 void Memory::Reset()
 {
     for (Pages::iterator it = memory.begin(), end = memory.end();

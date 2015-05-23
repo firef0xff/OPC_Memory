@@ -1,30 +1,30 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 #include "cache.h"
-
+#include "def.h"
 
 namespace memory
 {
 
 class Memory
 {
-public:
+public:    
     Memory();
     ~Memory();
 
-    template <typename KeyType, typename ValueType>
-    Cache<KeyType, ValueType>& Page()
+    template <typename ValueType>
+    Cache<addr_type, ValueType>& Page()
     {
         static uint id = ++type_id;
 
         Pages::iterator it = memory.find(id);
         if (it != memory.end())
         {
-            return *static_cast<Cache<KeyType, ValueType> *>(it->second);
+            return *static_cast<Cache<addr_type, ValueType> *>(it->second);
         }
         else
         {
-            Cache<KeyType, ValueType> *ptr = new Cache<KeyType, ValueType>();
+            Cache<addr_type, ValueType> *ptr = new Cache<addr_type, ValueType>();
             memory.insert(PagesItem(id, ptr));
             return *ptr;
         }
