@@ -13,6 +13,6 @@ HEADERS += \
     def.h \
     opc_field.h \
     table.h \
-    opc_types.h
+    opc_addr.h
 
 QMAKE_CXXFLAGS += -std=c++11

@@ -2,8 +2,7 @@
 #define OPC_TYPE_H
 #include "def.h"
 #include "table.h"
-#include <cstdio>
-
+#include "opc_addr.h"
 
 namespace opc
 {
@@ -13,15 +12,15 @@ template <typename T>
 class OPC_field
 {
 public:
-    OPC_field(const Table &parent, const addr_type addr)
-        : addr(addr), ofset(0), parent(parent)
+    OPC_field(const Table *parent, const addr_type addr)
+        : addr(addr), ofset(0), value(0)
     {
-        CompileAddr(false);
+        CompileAddr<T>(addr_str, sizeof(addr_str), parent, addr);
     }
-    OPC_field(const Table &parent, const addr_type addr, const addr_ofset_type ofset)
-        :addr(addr), ofset(ofset), parent(parent)
+    OPC_field(const Table *parent,const addr_type addr, const addr_ofset_type ofset)
+        :addr(addr), ofset(ofset),value(0)
     {
-        CompileAddr(true);
+        CompileAddr<T>(addr_str, sizeof(addr_str), parent, addr, &ofset);
     }
 
     ~OPC_field()
@@ -42,17 +41,12 @@ public:
         return addr_str;
     }
 private:
-    void CompileAddr(bool use_ofset)
-    {
-        if (use_ofset)
-            snprintf(addr_str, 40, "%s%lu.%u", parent.Name(), addr, ofset);
-        else
-            snprintf(addr_str, 40, "%s%lu", parent.Name(), addr);
-    }
+    OPC_field (const OPC_field&);
+    void operator = (const OPC_field&);
+
     char addr_str[41] = {0};
     const addr_type addr;
     const addr_ofset_type ofset;
-    const Table &parent;
 
     T value;
 };

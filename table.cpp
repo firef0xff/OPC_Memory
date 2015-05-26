@@ -3,8 +3,8 @@
 namespace opc
 {
 Table::Table(const char* name)
-{
-    strncpy(this->name, name, 6);
+    :name(name)
+{    
 }
 
 Table::~Table()
